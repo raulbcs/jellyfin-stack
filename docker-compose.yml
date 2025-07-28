@@ -1,0 +1,193 @@
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:latest
+    container_name: jellyfin
+    ports:
+      - "${JELLYFIN_PORT}:${JELLYFIN_PORT}"
+      - "${JELLYFIN_HTTPS_PORT}:${JELLYFIN_HTTPS_PORT}"
+    volumes:
+      - ./config/jellyfin:/config
+      - ./media:/media
+      - /tmp:/transcode
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Sao_Paulo
+    restart: unless-stopped
+    networks:
+      - jellyfin-network
+
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    ports:
+      - "${RADARR_PORT}:${RADARR_PORT}"
+    volumes:
+      - ./config/radarr:/config
+      - ./media/movies:/movies
+      - ./downloads/movies:/downloads
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Sao_Paulo
+    restart: unless-stopped
+    networks:
+      - jellyfin-network
+    depends_on:
+      - prowlarr
+      - qbittorrent
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    ports:
+      - "${SONARR_PORT}:${SONARR_PORT}"
+    volumes:
+      - ./config/sonarr:/config
+      - ./media/tv:/tv
+      - ./downloads/tv:/downloads
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Sao_Paulo
+    restart: unless-stopped
+    networks:
+      - jellyfin-network
+    depends_on:
+      - prowlarr
+      - qbittorrent
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    ports:
+      - "${PROWLARR_PORT}:${PROWLARR_PORT}"
+    volumes:
+      - ./config/prowlarr:/config
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Sao_Paulo
+    restart: unless-stopped
+    networks:
+      - jellyfin-network
+
+  jackett:
+    image: lscr.io/linuxserver/jackett:latest
+    container_name: jackett
+    ports:
+      - "${JACKETT_PORT}:${JACKETT_PORT}"
+    volumes:
+      - ./config/jackett:/config
+      - ./downloads:/downloads
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Sao_Paulo
+    restart: unless-stopped
+    networks:
+      - jellyfin-network
+
+  jellyseerr:
+    image: fallenbagel/jellyseerr:latest
+    container_name: jellyseerr
+    ports:
+      - "${JELLYSEERR_PORT}:${JELLYSEERR_PORT}"
+    volumes:
+      - ./config/jellyseerr:/app/config
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Sao_Paulo
+    restart: unless-stopped
+    networks:
+      - jellyfin-network
+    depends_on:
+      - jellyfin
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    ports:
+      - "${QBITTORRENT_PORT}:${QBITTORRENT_PORT}"
+      - "${QBITTORRENT_PORT_RANGE}:${QBITTORRENT_PORT_RANGE}"
+      - "${QBITTORRENT_PORT_RANGE}:${QBITTORRENT_PORT_RANGE}/udp"
+    volumes:
+      - ./config/qbittorrent:/config
+      - ./downloads:/downloads
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Sao_Paulo
+      - WEBUI_PORT=8080
+    restart: unless-stopped
+    networks:
+      - jellyfin-network
+
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    ports:
+      - "${BAZARR_PORT}:${BAZARR_PORT}"
+    volumes:
+      - ./config/bazarr:/config
+      - ./media/movies:/movies
+      - ./media/tv:/tv
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Sao_Paulo
+    restart: unless-stopped
+    networks:
+      - jellyfin-network
+    depends_on:
+      - radarr
+      - sonarr
+
+  dozzle:
+    image: amir20/dozzle:latest
+    container_name: dozzle
+    ports:
+      - "${DOZZLE_PORT}:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - TZ=America/Sao_Paulo
+    restart: unless-stopped
+    networks:
+      - jellyfin-network
+
+  homarr:
+    image: ghcr.io/ajnart/homarr:latest
+    container_name: homarr
+    ports:
+      - "${HOMARR_PORT}:${HOMARR_PORT}"
+    volumes:
+      - ./config/homarr:/app/data/configs
+      - ./icons:/app/public/icons
+    environment:
+      - TZ=America/Sao_Paulo
+    restart: unless-stopped
+    networks:
+      - jellyfin-network
+
+
+  janitorr:
+    image: ghcr.io/schaka/janitorr:stable
+    container_name: janitorr
+    volumes:
+      - ./config/janitorr:/config
+      - ./media:/media
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Sao_Paulo
+    restart: unless-stopped
+    networks:
+      - jellyfin-network
+    depends_on:
+      - jellyfin
+
+networks:
+  jellyfin-network:
+    driver: bridge
