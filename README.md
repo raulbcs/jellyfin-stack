@@ -1,20 +1,14 @@
 # Jellyfin Media Stack
 
-This is a complete media server stack running on Docker with the following services:
+This is a media server stack running on Docker with the following services:
 
 ## Services Included
 
 1. **Jellyfin** - Media server for streaming movies and TV shows
-2. **Radarr** - Movie management and automation
-3. **Sonarr** - TV show management and automation
-4. **Prowlarr** - Indexer manager for Radarr and Sonarr
-5. **Jellyseerr** - Request management and monitoring for Jellyfin
-6. **qBittorrent** - BitTorrent client
-7. **Bazarr** - Subtitle management for movies and TV shows
-8. **Dozzle** - Used to view the logs of any container
-9. **Homarr** - Used as a dashboard for docker containers
-10. **Janitorr** - Removes untagged media when it reaches a certain age
-11. **Jackett** - Additional indexer support
+2. **Sonarr** - TV show management and automation
+3. **Prowlarr** - Indexer manager for Sonarr
+4. **Jackett** - Torrent indexer proxy for Sonarr/Radarr
+5. **qBittorrent** - BitTorrent client
 
 ## Directory Structure
 
@@ -42,7 +36,7 @@ This is a complete media server stack running on Docker with the following servi
 
 2. Create the directory structure:
    ```bash
-   mkdir -p media/movies media/tv downloads/movies downloads/tv
+   mkdir -p media/tv downloads/tv
    ```
 
 3. Start the services:
@@ -55,38 +49,27 @@ This is a complete media server stack running on Docker with the following servi
 | Service      | Port  |
 |--------------|-------|
 | Jellyfin     | 8096  |
-| Radarr       | 7878  |
 | Sonarr       | 8989  |
 | Prowlarr     | 9696  |
 | Jackett      | 9117  |
-| Jellyseerr   | 5055  |
 | qBittorrent  | 8080  |
-| Bazarr       | 6767  |
-| Dozzle       | 9999  |
-| Homarr       | 7575  |
-| Janitorr     | 8978  |
 
 ## Configuration
 
 After starting the services, you'll need to configure each service:
 
 1. **Jellyfin**: http://localhost:8096
-2. **Radarr**: http://localhost:7878
-3. **Sonarr**: http://localhost:8989
-4. **Prowlarr**: http://localhost:9696
-5. **Jackett**: http://localhost:9117
-6. **Jellyseerr**: http://localhost:5055
-7. **qBittorrent**: http://localhost:8080
-8. **Bazarr**: http://localhost:6767
-9. **Dozzle**: http://localhost:9999
-10. **Homarr**: http://localhost:7575
+2. **Sonarr**: http://localhost:8989
+3. **Prowlarr**: http://localhost:9696
+4. **Jackett**: http://localhost:9117
+5. **qBittorrent**: http://localhost:8080
 
 ## Connecting Services
 
-- Configure Radarr and Sonarr to use qBittorrent as the download client
-- Configure Radarr and Sonarr to use Prowlarr as the indexer
-- Configure Jellyseerr to connect to Jellyfin
-- Configure Bazarr to connect to Radarr and Sonarr
+- Configure Sonarr to use qBittorrent as the download client
+- Configure Sonarr to use correct folder (Media Management > Root Folders)
+- Configure Sonarr to use Prowlarr as the indexer (or Jackett as an alternative)
+- Configure Sonarr to hardlink files
 
 ## Managing the Stack
 
@@ -96,9 +79,6 @@ After starting the services, you'll need to configure each service:
 - Update services: `docker-compose pull && docker-compose up -d`
 
 ## Notes
-
-- All services are configured to restart automatically unless stopped
 - Configuration files are persisted in the `config` directory
-- Media files are stored in the `media` directory
+- Media files are stored in the `media` directory (copied by Radarr/Sonarr)
 - Downloaded files are stored in the `downloads` directory
-- The stack is optimized for M1 Mac hardware acceleration
