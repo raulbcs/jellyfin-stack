@@ -82,3 +82,6 @@ After starting the services, you'll need to configure each service:
 - Configuration files are persisted in the `config` directory
 - Media files are stored in the `media` directory (copied by Radarr/Sonarr)
 - Downloaded files are stored in the `downloads` directory
+
+## Samsung TV app
+- Use [PatrickSt1991/Samsung-Jellyfin-Installer](https://github.com/PatrickSt1991/Samsung-Jellyfin-Installer) to install Jellyfin app in your Samsung TV.
