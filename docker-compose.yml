@@ -103,7 +103,7 @@ services:
       - jellyfin-network
 
   radarr:
-    image: lscr.io/linuxserver/radarr:5.26.2
+    image: lscr.io/linuxserver/radarr:5.28.0
     container_name: radarr
     ports:
       - "${RADARR_PORT}:${RADARR_PORT}"
