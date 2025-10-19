@@ -89,7 +89,7 @@ services:
       - jellyfin-network
 
   flaresolverr:
-    image: ghcr.io/flaresolverr/flaresolverr:v3.3.25
+    image: ghcr.io/flaresolverr/flaresolverr:v3.4.2
     container_name: flaresolverr
     ports:
       - "${FLARESOLVERR_PORT}:${FLARESOLVERR_PORT}"
