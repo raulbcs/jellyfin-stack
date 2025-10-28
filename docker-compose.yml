@@ -38,7 +38,7 @@ services:
       - qbittorrent
 
   prowlarr:
-    image: lscr.io/linuxserver/prowlarr:1.37.0
+    image: lscr.io/linuxserver/prowlarr:2.1.5
     container_name: prowlarr
     ports:
       - "${PROWLARR_PORT}:${PROWLARR_PORT}"
@@ -51,7 +51,6 @@ services:
     restart: unless-stopped
     networks:
       - jellyfin-network
-
 
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:5.1.2
