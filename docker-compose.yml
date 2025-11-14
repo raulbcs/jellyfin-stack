@@ -1,6 +1,6 @@
 services:
   jellyfin:
-    image: jellyfin/jellyfin:10.10.7
+    image: jellyfin/jellyfin:10.11.2
     container_name: jellyfin
     ports:
       - "${JELLYFIN_PORT}:${JELLYFIN_PORT}"
@@ -72,7 +72,7 @@ services:
       - jellyfin-network
 
   jackett:
-    image: lscr.io/linuxserver/jackett:0.24.270
+    image: lscr.io/linuxserver/jackett:0.24.301
     container_name: jackett
     ports:
       - "${JACKETT_PORT}:${JACKETT_PORT}"
@@ -88,7 +88,7 @@ services:
       - jellyfin-network
 
   flaresolverr:
-    image: ghcr.io/flaresolverr/flaresolverr:v3.4.4
+    image: ghcr.io/flaresolverr/flaresolverr:v3.4.5
     container_name: flaresolverr
     ports:
       - "${FLARESOLVERR_PORT}:${FLARESOLVERR_PORT}"
