@@ -38,7 +38,7 @@ services:
       - qbittorrent
 
   prowlarr:
-    image: lscr.io/linuxserver/prowlarr:2.1.5
+    image: lscr.io/linuxserver/prowlarr:2.3.0
     container_name: prowlarr
     ports:
       - "${PROWLARR_PORT}:${PROWLARR_PORT}"
