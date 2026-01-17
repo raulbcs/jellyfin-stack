@@ -72,7 +72,7 @@ services:
       - jellyfin-network
 
   jackett:
-    image: lscr.io/linuxserver/jackett:0.24.462
+    image: lscr.io/linuxserver/jackett:0.24.868
     container_name: jackett
     ports:
       - "${JACKETT_PORT}:${JACKETT_PORT}"
