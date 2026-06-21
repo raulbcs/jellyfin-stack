@@ -1,6 +1,6 @@
 services:
   jellyfin:
-    image: jellyfin/jellyfin:10.11.8
+    image: jellyfin/jellyfin:10.11.11
     container_name: jellyfin
     ports:
       - "${JELLYFIN_PORT}:${JELLYFIN_PORT}"
@@ -38,7 +38,7 @@ services:
       - qbittorrent
 
   prowlarr:
-    image: lscr.io/linuxserver/prowlarr:2.3.5
+    image: lscr.io/linuxserver/prowlarr:2.4.0
     container_name: prowlarr
     ports:
       - "${PROWLARR_PORT}:${PROWLARR_PORT}"
@@ -53,7 +53,7 @@ services:
       - jellyfin-network
 
   qbittorrent:
-    image: lscr.io/linuxserver/qbittorrent:5.2.0
+    image: lscr.io/linuxserver/qbittorrent:5.2.2
     container_name: qbittorrent
     ports:
       - "${QBITTORRENT_PORT}:${QBITTORRENT_PORT}"
@@ -72,7 +72,7 @@ services:
       - jellyfin-network
 
   jackett:
-    image: lscr.io/linuxserver/jackett:0.24.1866
+    image: lscr.io/linuxserver/jackett:0.24.2092
     container_name: jackett
     ports:
       - "${JACKETT_PORT}:${JACKETT_PORT}"
@@ -88,7 +88,7 @@ services:
       - jellyfin-network
 
   flaresolverr:
-    image: ghcr.io/flaresolverr/flaresolverr:v3.4.6
+    image: ghcr.io/flaresolverr/flaresolverr:v3.5.0
     container_name: flaresolverr
     ports:
       - "${FLARESOLVERR_PORT}:${FLARESOLVERR_PORT}"
@@ -102,7 +102,7 @@ services:
       - jellyfin-network
 
   radarr:
-    image: lscr.io/linuxserver/radarr:6.1.1
+    image: lscr.io/linuxserver/radarr:6.2.1
     container_name: radarr
     ports:
       - "${RADARR_PORT}:${RADARR_PORT}"
