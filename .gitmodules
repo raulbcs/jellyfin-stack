@@ -1,0 +1,3 @@
+[submodule "torrent-indexer"]
+	path = torrent-indexer
+	url = https://github.com/leandrotsampa/torrent-indexer.git
