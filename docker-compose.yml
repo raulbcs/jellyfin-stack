@@ -52,13 +52,33 @@ services:
     networks:
       - jellyfin-network
 
+  # VPN Mullvad (WireGuard) — só o qBittorrent passa por aqui
+  gluetun:
+    image: qmcgaw/gluetun:latest
+    container_name: gluetun
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    ports:
+      - "${QBITTORRENT_PORT}:${QBITTORRENT_PORT}" # WebUI do qBittorrent, publicada via gluetun
+    volumes:
+      - ./config/gluetun:/gluetun
+    env_file:
+      - .env.secrets # WIREGUARD_PRIVATE_KEY / WIREGUARD_ADDRESSES (fora do git)
+    environment:
+      - VPN_SERVICE_PROVIDER=mullvad
+      - VPN_TYPE=wireguard
+      # Opcional: fixar país. Ex.: SERVER_COUNTRIES=Sweden
+      - TZ=America/Sao_Paulo
+    restart: unless-stopped
+    networks:
+      - jellyfin-network
+
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:5.2.3
     container_name: qbittorrent
-    ports:
-      - "${QBITTORRENT_PORT}:${QBITTORRENT_PORT}"
-      - "${QBITTORRENT_PORT_RANGE}:${QBITTORRENT_PORT_RANGE}"
-      - "${QBITTORRENT_PORT_RANGE}:${QBITTORRENT_PORT_RANGE}/udp"
+    network_mode: "service:gluetun" # TODO o tráfego sai pela Mullvad
     volumes:
       - ./config/qbittorrent:/config
       - ./downloads:/downloads
@@ -68,8 +88,9 @@ services:
       - TZ=America/Sao_Paulo
       - WEBUI_PORT=8080
     restart: unless-stopped
-    networks:
-      - jellyfin-network
+    depends_on:
+      gluetun:
+        condition: service_healthy
 
   jackett:
     image: lscr.io/linuxserver/jackett:0.24.2237
